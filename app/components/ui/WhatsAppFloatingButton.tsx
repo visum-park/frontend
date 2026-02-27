@@ -1,3 +1,5 @@
+"use client";
+
 import { MessageCircle } from "lucide-react";
 const WHATSAPP_PHONE = process.env.NEXT_PUBLIC_WHATSAPP_PHONE;
 
