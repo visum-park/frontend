@@ -10,9 +10,9 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   const navItems = [
-    { name: "Restaurant", path: "/restaurant" },
-    // { name: "Conference Halls", path: "/conference-halls" },
+    { name: "Conference Halls", path: "/conference-halls" },
     // { name: "Accommodation", path: "/accommodation" },
+    { name: "Restaurant", path: "/restaurant" },
     // { name: "Team Building", path: "/team-building" },
     // { name: "Kid's Playground", path: "/kids-playground" },
   ];
