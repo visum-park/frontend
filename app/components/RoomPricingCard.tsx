@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import RoomTerms from "./RoomTerms";
-
-/* ================= TYPES ================= */
+import RoomTerms from "./TermsAndConditions";
 
 type OccupancyType = "single" | "double";
 type Currency = "KES" | "USD";
@@ -36,8 +34,6 @@ const formatKES = (amount: number) =>
 const formatUSD = (amount: number) =>
   new Intl.NumberFormat("en-US").format(amount);
 
-/* ================= PRICE ROW ================= */
-
 const PriceRow = ({
   label,
   amount,
@@ -55,8 +51,6 @@ const PriceRow = ({
     </span>
   </div>
 );
-
-/* ================= COMPONENT ================= */
 
 export default function RoomPricingCard({ prices }: RoomPricingCardProps) {
   const [type, setType] = useState<"residents" | "nonResidents">("residents");

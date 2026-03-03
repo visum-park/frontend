@@ -3,7 +3,7 @@
 import Carousel from "@/app/components/Carousel";
 import RoomPricingCard from "@/app/components/RoomPricingCard";
 import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 const room = {
@@ -20,38 +20,20 @@ const room = {
 
   prices: {
     residents: {
-      single: {
-        bedOnly: 3000,
-        bedBreakfast: 3500,
-      },
-      double: {
-        bedOnly: 4000,
-        bedBreakfast: 5000,
-      },
-      longStay: {
-        single: 2500,
-        double: 3500,
-      },
+      single: { bedOnly: 3000, bedBreakfast: 3500 },
+      double: { bedOnly: 4000, bedBreakfast: 5000 },
+      longStay: { single: 2500, double: 3500 },
     },
-
     nonResidents: {
-      single: {
-        bedBreakfast: 48,
-        halfBoard: 77,
-        fullBoard: 97,
-      },
-      double: {
-        bedBreakfast: 74,
-        halfBoard: 96,
-        fullBoard: 122,
-      },
+      single: { bedBreakfast: 48, halfBoard: 77, fullBoard: 97 },
+      double: { bedBreakfast: 74, halfBoard: 96, fullBoard: 122 },
     },
   },
 };
 
 const DeluxeRoomPage = () => {
   return (
-    <section className="bg-white py-28 px-6 lg:px-12">
+    <section className="bg-white p-6 lg:px-12">
       <div className="max-w-7xl mx-auto">
         {/* Back Link */}
         <div className="mb-8">
@@ -89,7 +71,18 @@ const DeluxeRoomPage = () => {
           />
         </div>
 
+        {/* Pricing Card */}
         <RoomPricingCard prices={room.prices} />
+
+        {/* Next Room Link */}
+        <div className="mt-10 text-center">
+          <Link
+            href="/accommodation/standard"
+            className="inline-flex items-center gap-2 text-sm font-medium text-[#BC9F64] hover:underline transition">
+            View Standard Room
+            <ArrowRight size={18} />
+          </Link>
+        </div>
       </div>
     </section>
   );

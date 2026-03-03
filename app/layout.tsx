@@ -28,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="antialiased bg-white">
+      <body className="antialiased bg-white" suppressHydrationWarning>
         {/* font variables applied inside client wrapper */}
         <div className={`${geistSans.variable} ${geistMono.variable}`}>
           <Navbar />

@@ -37,7 +37,7 @@ const rooms = [
 
 const Accommodation = () => {
   return (
-    <section className="bg-white transition-colors duration-500 py-28 px-6 lg:px-12">
+    <section className="bg-white transition-colors duration-500 py-10 p-6 lg:px-12">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
