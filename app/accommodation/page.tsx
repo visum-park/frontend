@@ -16,6 +16,7 @@ const rooms = [
     autoSlideInterval: 6000,
     priceResidents: "KES 2,500 / night",
     priceNonResidents: "USD 42 / night",
+    url: "/accommodation/standard",
   },
   {
     title: "Deluxe Room",
@@ -30,6 +31,7 @@ const rooms = [
     autoSlideInterval: 4000,
     priceResidents: "KES 3,500 / night",
     priceNonResidents: "USD 48 / night",
+    url: "/accommodation/deluxe",
   },
 ];
 
@@ -68,6 +70,7 @@ const Accommodation = () => {
               priceResidents={room.priceResidents}
               priceNonResidents={room.priceNonResidents}
               reverse={index % 2 !== 0} // alternate layout
+              url={room.url}
             />
           ))}
         </div>

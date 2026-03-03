@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import Carousel from "./Carousel";
 
 interface RoomCardProps {
@@ -11,6 +12,7 @@ interface RoomCardProps {
   autoSlideInterval?: number;
   priceResidents: string;
   priceNonResidents: string;
+  url: string;
 }
 
 const RoomCard = ({
@@ -19,6 +21,7 @@ const RoomCard = ({
   images,
   priceResidents,
   priceNonResidents,
+  url,
   autoSlideInterval = 6000,
   reverse = false,
 }: RoomCardProps) => {
@@ -61,9 +64,11 @@ const RoomCard = ({
 
         <p className="text-gray-600 leading-relaxed mb-8">{description}</p>
 
-        <button className="px-8 py-3 rounded border border-[#BC9F64] text-[#BC9F64] uppercase tracking-wide text-sm transition-all duration-500 hover:bg-[#BC9F64] hover:text-white">
-          View Details
-        </button>
+        <Link href={url}>
+          <button className="px-8 py-3 rounded border cursor-pointer border-[#BC9F64] text-[#BC9F64] uppercase tracking-wide text-sm transition-all duration-500 hover:bg-[#BC9F64] hover:text-white">
+            View Details
+          </button>
+        </Link>
       </div>
     </motion.div>
   );
