@@ -31,9 +31,29 @@ export default function RestaurantView() {
       </section>
 
       {/* Carousel */}
-      <section className="max-w-6xl mx-auto px-4 pb-24">
+      <section className="max-w-6xl mx-auto px-4 pb-4">
         <Carousel images={images} autoSlideInterval={5000} height="h-[420px]" />
       </section>
+      {/* CTA */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.35, duration: 0.5 }}
+        className="my-6 flex justify-center">
+        <a
+          href="/restaurant/menu"
+          className="group inline-flex items-center gap-2 px-9 py-3 rounded-full text-lg font-medium transition-all duration-300"
+          style={{
+            background: "linear-gradient(135deg, #BC9F64 0%, #a68a54 100%)",
+            color: "#2D4B37",
+            boxShadow: "0 10px 25px rgba(188, 159, 100, 0.35)",
+          }}>
+          View Our Menu
+          <span className="transition-transform duration-300 group-hover:translate-x-1">
+            →
+          </span>
+        </a>
+      </motion.div>
     </div>
   );
 }
