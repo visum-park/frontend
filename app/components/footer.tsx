@@ -132,7 +132,7 @@ const Footer = () => {
               <p className="text-white text-lg">visumparkhotel@yahoo.com</p>
 
               <span
-                className="text-sm font-medium flex items-center gap-1 transition-transform group-hover:translate-x-1"
+                className="text-sm p-2 font-medium flex items-center gap-1 transition-transform group-hover:translate-x-1"
                 style={{ color: "#BC9F64" }}>
                 Email us →
               </span>

@@ -23,19 +23,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}>
-        <Navbar />
-
-        {children}
-
-        <WhatsAppFloatingButton />
-        <Footer />
+    <html lang="en" suppressHydrationWarning>
+      <body className="antialiased bg-white">
+        {/* font variables applied inside client wrapper */}
+        <div className={`${geistSans.variable} ${geistMono.variable}`}>
+          <Navbar />
+          {children}
+          <WhatsAppFloatingButton />
+          <Footer />
+        </div>
       </body>
     </html>
   );
