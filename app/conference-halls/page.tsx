@@ -1,5 +1,6 @@
 "use client";
 
+import SendInquiryModal from "@/app/components/SendInquiryModal";
 import Carousel from "../components/Carousel";
 import TermsAndConditions from "../components/TermsAndConditions";
 
@@ -56,30 +57,30 @@ const Conference = () => {
         </div>
 
         {/* Pricing Section */}
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl font-semibold text-neutral-900">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900">
               Conference Packages
             </h2>
-            <p className="text-neutral-500 mt-3">
+            <p className="text-neutral-500 mt-4 text-lg">
               Flexible solutions for corporate retreats, meetings & workshops
             </p>
           </div>
 
-          {/* Modern Pricing Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+          {/* Premium Pricing Layout */}
+          <div className="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto">
             {pricing.map((item, index) => (
               <div
                 key={index}
-                className={`relative rounded-2xl border p-6 transition duration-300 hover:shadow-xl hover:-translate-y-1 bg-white ${
+                className={`relative rounded-3xl border px-10 py-12 transition duration-300 bg-white text-center ${
                   item.highlight
-                    ? "border-[#BC9F64] shadow-lg"
-                    : "border-neutral-200"
-                }`}>
+                    ? "border-[#BC9F64] shadow-2xl scale-[1.03]"
+                    : "border-neutral-200 shadow-md"
+                } hover:shadow-2xl`}>
                 {/* Badge */}
                 {item.tag && (
                   <div
-                    className={`absolute top-4 right-4 text-xs font-semibold px-3 py-1 rounded-full ${
+                    className={`absolute -top-4 left-1/2 -translate-x-1/2 text-xs font-semibold px-4 py-1.5 rounded-full ${
                       item.highlight
                         ? "bg-[#BC9F64] text-white"
                         : "bg-neutral-100 text-neutral-600"
@@ -89,33 +90,26 @@ const Conference = () => {
                 )}
 
                 {/* Title */}
-                <h3 className="text-lg font-semibold text-neutral-900 mb-2">
+                <h3 className="text-2xl font-semibold text-neutral-900 mb-4">
                   {item.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-sm text-neutral-500 mb-6">
+                <p className="text-neutral-500 mb-8 text-base">
                   {item.description}
                 </p>
 
                 {/* Price */}
-                <div className="text-2xl font-semibold text-[#BC9F64]">
+                <div className="text-4xl font-semibold text-[#BC9F64] tracking-tight">
                   KES {formatKES(item.price)}
                 </div>
 
-                {/* CTA */}
-                <button
-                  className={`mt-6 w-full py-2.5 rounded-full text-sm font-medium transition ${
-                    item.highlight
-                      ? "bg-[#BC9F64] text-white hover:opacity-90"
-                      : "border border-neutral-300 text-neutral-700 hover:border-[#BC9F64] hover:text-[#BC9F64]"
-                  }`}>
-                  Send Inquiry
-                </button>
+                <p className="text-sm text-neutral-400 mt-2">Per booking</p>
               </div>
             ))}
           </div>
         </div>
+        <SendInquiryModal facility="Conference" />
 
         <TermsAndConditions />
       </section>

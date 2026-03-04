@@ -2,6 +2,7 @@
 
 import Carousel from "@/app/components/Carousel";
 import RoomPricingCard from "@/app/components/RoomPricingCard";
+import SendInquiryModal from "@/app/components/SendInquiryModal";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -73,6 +74,8 @@ const DeluxeRoomPage = () => {
 
         {/* Pricing Card */}
         <RoomPricingCard prices={room.prices} />
+
+        <SendInquiryModal facility="Deluxe Room" />
 
         {/* Next Room Link */}
         <div className="mt-10 text-center">
