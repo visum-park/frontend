@@ -11,7 +11,7 @@ export default function Navbar() {
 
   const navItems = [
     { name: "Conference Halls", path: "/conference-halls" },
-    // { name: "Accommodation", path: "/accommodation" },
+    { name: "Accommodation", path: "/accommodation" },
     { name: "Restaurant", path: "/restaurant" },
     // { name: "Team Building", path: "/team-building" },
     // { name: "Kid's Playground", path: "/kids-playground" },

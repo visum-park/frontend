@@ -14,7 +14,7 @@ export default function RestaurantView() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <section className="text-center py-20 px-4">
+      <section className="text-center py-10 px-4">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
