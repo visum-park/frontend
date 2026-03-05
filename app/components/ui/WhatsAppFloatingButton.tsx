@@ -6,7 +6,7 @@ const WHATSAPP_PHONE = process.env.NEXT_PUBLIC_WHATSAPP_PHONE;
 export function WhatsAppFloatingButton() {
   return (
     <a
-      href={`https://wa.me/${WHATSAPP_PHONE}?text=Hello%20I%20would%20like%20to%20inquire`}
+      href={`https://wa.me/${WHATSAPP_PHONE}?text=Hello,%20I%20would%20like%20to%20inquire%20about%20your%20services`}
       target="_blank"
       rel="noopener noreferrer"
       className="

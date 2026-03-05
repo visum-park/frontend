@@ -13,8 +13,8 @@ export default function Navbar() {
     { name: "Conference Halls", path: "/conference-halls" },
     { name: "Accommodation", path: "/accommodation" },
     { name: "Restaurant", path: "/restaurant" },
-    // { name: "Team Building", path: "/team-building" },
-    // { name: "Kid's Playground", path: "/kids-playground" },
+    { name: "Team Building", path: "/team-building" },
+    { name: "Kid's Playground", path: "/kids-playground" },
   ];
 
   return (
@@ -28,8 +28,8 @@ export default function Navbar() {
             Visum Park
           </a>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex space-x-8">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-4">
             {navItems.map((item) => {
               const isActive = pathname.includes(item.path);
 
@@ -37,18 +37,13 @@ export default function Navbar() {
                 <motion.a
                   key={item.name}
                   href={item.path}
-                  className={`relative px-3 py-2 font-medium transition-colors ${
+                  whileHover={{ scale: 1.05 }}
+                  className={`px-4 py-2 rounded-lg font-medium transition ${
                     isActive
-                      ? "text-[#BC9F64]"
-                      : "text-gray-700 hover:text-[#BC9F64]"
+                      ? "bg-[#BC9F64] text-white"
+                      : "text-gray-700 hover:bg-[#BC9F64] hover:text-white"
                   }`}>
                   {item.name}
-                  {isActive && (
-                    <motion.span
-                      layoutId="underline"
-                      className="absolute left-0 right-0 bottom-0 h-1 bg-[#BC9F64] rounded"
-                    />
-                  )}
                 </motion.a>
               );
             })}
@@ -68,27 +63,30 @@ export default function Navbar() {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
+            exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden bg-white shadow-lg border-t">
-            <div className="flex flex-col px-4 py-4 space-y-4">
-              {navItems.map((item) => {
+            className="md:hidden bg-white border-t shadow-lg">
+            <div className="flex flex-col px-4 py-6 space-y-4">
+              {navItems.map((item, index) => {
                 const isActive = pathname.includes(item.path);
 
                 return (
-                  <a
+                  <motion.a
                     key={item.name}
                     href={item.path}
                     onClick={() => setOpen(false)}
-                    className={`font-medium ${
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className={`block w-full text-center px-5 py-3 rounded-xl font-medium transition ${
                       isActive
-                        ? "text-[#BC9F64]"
-                        : "text-gray-700 hover:text-[#BC9F64]"
+                        ? "bg-[#BC9F64] text-white"
+                        : "bg-gray-50 text-gray-700 hover:bg-[#BC9F64] hover:text-white"
                     }`}>
                     {item.name}
-                  </a>
+                  </motion.a>
                 );
               })}
             </div>
