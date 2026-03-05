@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import RoomTerms from "./TermsAndConditions";
+import TermsAndConditions from "./TermsAndConditions";
 
 type OccupancyType = "single" | "double";
 type Currency = "KES" | "USD";
@@ -26,7 +26,6 @@ interface RoomPricingCardProps {
   prices: Pricing;
 }
 
-/* ================= FORMATTERS ================= */
 
 const formatKES = (amount: number) =>
   new Intl.NumberFormat("en-KE").format(amount);
@@ -72,7 +71,7 @@ export default function RoomPricingCard({ prices }: RoomPricingCardProps) {
         <div className="flex bg-neutral-100 rounded-full p-1 text-xs font-medium">
           <button
             onClick={() => setType("residents")}
-            className={`px-4 py-1.5 rounded-full transition ${
+            className={`px-4 py-1.5 cursor-pointer rounded-full transition ${
               isResident
                 ? "bg-[#BC9F64] text-white shadow-sm"
                 : "text-neutral-600"
@@ -81,7 +80,7 @@ export default function RoomPricingCard({ prices }: RoomPricingCardProps) {
           </button>
           <button
             onClick={() => setType("nonResidents")}
-            className={`px-4 py-1.5 rounded-full transition ${
+            className={`px-4 py-1.5 cursor-pointer rounded-full transition ${
               !isResident
                 ? "bg-[#BC9F64] text-white shadow-sm"
                 : "text-neutral-600"
@@ -92,7 +91,7 @@ export default function RoomPricingCard({ prices }: RoomPricingCardProps) {
       </div>
 
       {/* Pricing Content */}
-      <div className="space-y-8">
+      <div className="space-y-6">
         {occupancies.map((occupancy) => {
           const residentData = prices.residents[occupancy];
           const nonResidentData = prices.nonResidents[occupancy];
@@ -177,13 +176,8 @@ export default function RoomPricingCard({ prices }: RoomPricingCardProps) {
           </div>
         )}
 
-        {/* CTA */}
-        <button className="w-full mt-6 py-3 rounded-full bg-[#BC9F64] text-white text-sm font-semibold hover:opacity-90 transition">
-          Send Inquiry
-        </button>
-
         {/* Terms */}
-        <RoomTerms />
+        <TermsAndConditions />
       </div>
     </div>
   );

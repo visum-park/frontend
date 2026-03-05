@@ -2,6 +2,7 @@
 
 import Carousel from "@/app/components/Carousel";
 import RoomPricingCard from "@/app/components/RoomPricingCard";
+import SendInquiryModal from "@/app/components/SendInquiryModal";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -62,7 +63,6 @@ const StandardRoomPage = () => {
             Back to Accommodation
           </Link>
         </div>
-
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -74,13 +74,12 @@ const StandardRoomPage = () => {
             {room.title}
           </h1>
 
-          <div className="w-20 h-[2px] bg-[#BC9F64] mx-auto mt-6 mb-6" />
+          <div className="h-0.5 bg-[#BC9F64] mx-auto mt-6 mb-6" />
 
           <p className="text-lg text-gray-600 leading-relaxed">
             {room.description}
           </p>
         </motion.div>
-
         {/* Carousel */}
         <div className="mb-8">
           <Carousel
@@ -89,9 +88,9 @@ const StandardRoomPage = () => {
             height="h-[420px]"
           />
         </div>
-
         <RoomPricingCard prices={room.prices} />
 
+        <SendInquiryModal facility="Standard Room" />
         {/* Next Room Link */}
         <div className="mt-10 text-center">
           <Link
