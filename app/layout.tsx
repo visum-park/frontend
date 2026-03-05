@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Footer from "./components/footer";
+import HiringBanner from "./components/HiringBanner";
+import JobAdvertToast from "./components/JobAdvertToast";
 import Navbar from "./components/navbar";
 import { WhatsAppFloatingButton } from "./components/ui/WhatsAppFloatingButton";
 import "./globals.css";
@@ -32,6 +34,8 @@ export default function RootLayout({
         {/* font variables applied inside client wrapper */}
         <div className={`${geistSans.variable} ${geistMono.variable}`}>
           <Navbar />
+          <HiringBanner />
+          <JobAdvertToast />
           {children}
           <WhatsAppFloatingButton />
           <Footer />
