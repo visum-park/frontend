@@ -15,6 +15,7 @@ export default function Navbar() {
     { name: "Restaurant", path: "/restaurant" },
     { name: "Team Building", path: "/team-building" },
     { name: "Kid's Playground", path: "/kids-playground" },
+    { name: "Work With Us", path: "/careers" },
   ];
 
   return (
