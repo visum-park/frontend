@@ -5,10 +5,10 @@ import Carousel from "../components/Carousel";
 import TermsAndConditions from "../components/TermsAndConditions";
 
 const images = [
-  "/images/conference/conferenceHall.jpeg",
-  "/images/conference/backview.jpeg",
-  "/images/conference/backview2.jpeg",
-  "/images/conference/backview3.jpeg",
+  // "/images/conference/conferenceHall.jpeg",
+  "/images/conference/conference2.jpeg",
+  "/images/conference/conference1.jpeg",
+  "/images/conference/conference3.jpeg",
 ];
 
 const formatKES = (amount: number) =>
