@@ -123,7 +123,7 @@ export default function CareersPage() {
               <div className="lg:col-span-5 flex justify-center items-start">
                 <div className="relative w-full rounded-xl overflow-hidden shadow-md border border-gray-200">
                   <Image
-                    src="/images/careers/hiring.png"
+                    src="/images/careers/head-chef-hiring.png"
                     alt="Head Chef Hiring Announcement - Visum Park Hotel"
                     width={800}
                     height={1100}
