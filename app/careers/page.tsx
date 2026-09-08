@@ -23,6 +23,7 @@ export default function CareersPage() {
     "Knowledge of HACCP and food safety standards.",
     "Experience in conference and banqueting operations is an added advantage.",
   ];
+  let hasOpenPositions = false
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -40,7 +41,7 @@ export default function CareersPage() {
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-6 py-12 space-y-16">
         {/* Active Job Section */}
-        <section className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        {hasOpenPositions ? <section className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-6 md:p-10">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-gray-100 mb-8">
               <div>
@@ -134,7 +135,14 @@ export default function CareersPage() {
               </div>
             </div>
           </div>
-        </section>
+        </section> : <div className="p-6 md:p-10">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-gray-100 mb-8">
+              <span className="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full mb-2">
+                  No Open Position
+                </span>
+            </div>
+          </div>}
+        
 
         {/* Recently Closed Positions */}
         <section className="pt-8 border-t border-gray-200">
@@ -151,6 +159,10 @@ export default function CareersPage() {
             </div>
             <div className="p-4 bg-white rounded-lg border border-gray-200 opacity-60">
               <h3 className="font-semibold text-gray-800">Kitchen Cook</h3>
+              <p className="text-xs text-gray-500 mt-1">Applications closed</p>
+            </div>
+            <div className="p-4 bg-white rounded-lg border border-gray-200 opacity-60">
+              <h3 className="font-semibold text-gray-800">Head Chef</h3>
               <p className="text-xs text-gray-500 mt-1">Applications closed</p>
             </div>
           </div>
