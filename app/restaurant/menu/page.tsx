@@ -3,21 +3,72 @@
 import { useEffect, useRef, useState } from "react";
 import { MENU_CATEGORIES, type MenuCategory, type MenuItem } from "./menuData";
 
+const USERS_SVG_GROUP = (
+  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
 const BRAND = "#BC9F64";
 const BRAND_DARK = "#1a3328";
 
-function getBadgeStyle(badge: string): string {
+function getBadgeStyle(badge: string, onDark = false): string {
   const b = badge.toLowerCase();
-  if (b.includes("veg") || b.includes("healthy") || b.includes("vegan"))
+  if (b.includes("veg") || b.includes("healthy") || b.includes("vegan") || b.includes("fruit"))
     return "bg-emerald-50 text-emerald-800 border border-emerald-200";
-  if (b.includes("signature") || b.includes("special") || b.includes("plated") || b.includes("chef"))
+  if (b.includes("signature") || b.includes("featured") || b.includes("group sharing"))
+    return onDark ? "bg-[#C59B27] text-[#0b2016] border border-[#C59B27]" : "bg-amber-50 text-amber-700 border border-amber-200";
+  if (b.includes("special") || b.includes("plated") || b.includes("chef"))
     return "bg-amber-50 text-amber-700 border border-amber-200";
   if (b.includes("seafood"))
     return "bg-sky-50 text-sky-700 border border-sky-200";
+  if (onDark)
+    return "bg-white/10 text-cream-100 border border-white/20";
   return "bg-stone-100 text-stone-600 border border-stone-200";
 }
 
 function MenuItemCard({ item }: { item: MenuItem }) {
+  if (item.featured) {
+    return (
+      <article
+        className="relative overflow-hidden rounded-2xl p-4 shadow-md border-2 text-white"
+        style={{ background: `linear-gradient(135deg, ${BRAND_DARK} 0%, #0b2016 100%)`, borderColor: `${BRAND}bb` }}>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: BRAND }}>
+              ★ Grand Banquet Package
+            </div>
+            <h4 className="text-[15px] font-semibold text-white leading-snug">{item.name}</h4>
+            {item.desc && <p className="text-xs leading-relaxed mt-1" style={{ color: "#c8d8d2" }}>{item.desc}</p>}
+          </div>
+          <div className="shrink-0 text-right">
+            <div className="inline-flex flex-col items-end px-2.5 py-1.5 rounded-xl" style={{ backgroundColor: BRAND }}>
+              <span className="text-[9px] uppercase tracking-wider font-medium leading-none" style={{ color: BRAND_DARK }}>KES</span>
+              <span className="text-sm font-bold tabular-nums leading-tight mt-0.5" style={{ color: BRAND_DARK }}>{item.price}</span>
+            </div>
+          </div>
+        </div>
+        {item.badges && item.badges.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
+            {item.badges.map((badge) => (
+              <span key={badge} className={`inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold ${getBadgeStyle(badge, true)}`}>{badge}</span>
+            ))}
+          </div>
+        )}
+        {item.options && item.options.length > 0 && (
+          <div className="mt-3 pt-2.5 border-t grid grid-cols-1 gap-1" style={{ borderColor: `${BRAND}44` }}>
+            {item.options.map((opt) => (
+              <div key={opt.label} className="flex items-center justify-between text-xs py-1 px-2.5 rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.07)" }}>
+                <span className="font-medium" style={{ color: "#dde8e4" }}>{opt.label}</span>
+                <span className="font-bold tabular-nums text-white">KES {opt.price}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </article>
+    );
+  }
+
   return (
     <article className="bg-white rounded-2xl p-4 shadow-sm border border-stone-100 hover:border-[#BC9F64]/40 transition-colors">
       <div className="flex items-start justify-between gap-3">
@@ -97,11 +148,15 @@ function matchesQuery(item: MenuItem, category: MenuCategory, groupName: string,
 
 export default function RestaurantMenuPage() {
   const [query, setQuery] = useState("");
+  const [groupOnly, setGroupOnly] = useState(false);
   const [activeId, setActiveId] = useState(MENU_CATEGORIES[0].id);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const isScrollingRef = useRef(false);
 
   const q = query.trim().toLowerCase();
+  const visibleCategories = groupOnly
+    ? MENU_CATEGORIES.filter((c) => c.isGroupCategory)
+    : MENU_CATEGORIES;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -129,9 +184,11 @@ export default function RestaurantMenuPage() {
     setTimeout(() => { isScrollingRef.current = false; }, 800);
   }
 
-  const totalVisible = MENU_CATEGORIES.reduce((acc, cat) =>
+  const totalVisible = visibleCategories.reduce((acc, cat) =>
     acc + cat.groups.reduce((a, g) =>
-      a + g.items.filter((item) => matchesQuery(item, cat, g.name, q)).length, 0), 0);
+      a + g.items
+        .filter((item) => (!groupOnly || item.isGroupSharing))
+        .filter((item) => matchesQuery(item, cat, g.name, q)).length, 0), 0);
 
   return (
     <div className="min-h-screen bg-[#f9f7f4]">
@@ -143,7 +200,7 @@ export default function RestaurantMenuPage() {
           <span
             className="text-[11px] font-semibold tracking-widest uppercase px-3 py-1 rounded-full border mb-2"
             style={{ color: BRAND, borderColor: `${BRAND}66`, backgroundColor: "rgba(188,159,100,0.08)" }}>
-            Restaurant &amp; Lounge
+            Garden, Restaurant &amp; Lounge
           </span>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-wide text-white">
             VISUM PARK HOTEL
@@ -166,8 +223,9 @@ export default function RestaurantMenuPage() {
         className="sticky top-16 z-40 shadow-md border-b backdrop-blur-md"
         style={{ backgroundColor: `${BRAND_DARK}f5`, borderColor: `${BRAND}33` }}>
         <div className="max-w-2xl mx-auto px-3 pt-2.5 pb-1.5">
-          {/* Search */}
-          <div className="relative flex items-center">
+          {/* Search + Group Filter */}
+          <div className="flex items-center gap-2">
+          <div className="relative flex-1 flex items-center">
             <svg
               className="w-4 h-4 absolute left-3 pointer-events-none"
               style={{ color: BRAND }}
@@ -203,12 +261,24 @@ export default function RestaurantMenuPage() {
               </button>
             )}
           </div>
+            <button
+              type="button"
+              onClick={() => setGroupOnly((v) => !v)}
+              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border transition"
+              style={groupOnly
+                ? { backgroundColor: BRAND, color: BRAND_DARK, borderColor: BRAND }
+                : { backgroundColor: "rgba(255,255,255,0.08)", color: "#e5e7eb", borderColor: "rgba(255,255,255,0.15)" }
+              }>
+              <span style={{ color: groupOnly ? BRAND_DARK : BRAND }}>{USERS_SVG_GROUP}</span>
+              Group Sharing
+            </button>
+          </div>
 
           {/* Category Tabs */}
           <nav
             className="flex items-center gap-1.5 overflow-x-auto py-2 mt-1"
             style={{ scrollbarWidth: "none" }}>
-            {MENU_CATEGORIES.map((cat) => {
+            {visibleCategories.map((cat) => {
               const isActive = cat.id === activeId;
               return (
                 <button
@@ -252,11 +322,13 @@ export default function RestaurantMenuPage() {
             </button>
           </div>
         ) : (
-          MENU_CATEGORIES.map((cat) => {
+          visibleCategories.map((cat) => {
             const visibleGroups = cat.groups
               .map((g) => ({
                 ...g,
-                items: g.items.filter((item) => matchesQuery(item, cat, g.name, q)),
+                items: g.items
+                  .filter((item) => (!groupOnly || item.isGroupSharing))
+                  .filter((item) => matchesQuery(item, cat, g.name, q)),
               }))
               .filter((g) => g.items.length > 0);
 
