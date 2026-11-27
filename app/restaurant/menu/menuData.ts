@@ -12,6 +12,7 @@ export interface MenuItem {
   options?: MenuOption[];
   featured?: boolean;
   isGroupSharing?: boolean;
+  drinkType?: string;
 }
 
 export interface MenuGroup {
@@ -22,6 +23,7 @@ export interface MenuGroup {
 
 export interface MenuCategory {
   id: string;
+  domain: "food" | "drinks";
   tabLabel: string;
   title: string;
   subtitle: string;
@@ -30,9 +32,24 @@ export interface MenuCategory {
   groups: MenuGroup[];
 }
 
+export type MenuMode = "all" | "food" | "drinks";
+
+export interface DrinkSubfilter {
+  id: string;
+  label: string;
+}
+
+export const DRINK_SUBFILTERS: DrinkSubfilter[] = [
+  { id: "all", label: "All Drinks" },
+  { id: "hot-tea", label: "Hot Teas & Infusions" },
+  { id: "coffee-porridge", label: "Coffee Bar & Porridge" },
+  { id: "cold", label: "Cold Juices, Sodas & Water" },
+];
+
 export const MENU_CATEGORIES: MenuCategory[] = [
   {
     id: "breakfast-bites",
+    domain: "food",
     tabLabel: "Breakfast & Morning Bites",
     title: "Breakfast Snacks & Morning Bites",
     subtitle: "Fresh Kenyan breakfast favorites & morning classics",
@@ -88,6 +105,7 @@ export const MENU_CATEGORIES: MenuCategory[] = [
   },
   {
     id: "main-courses",
+    domain: "food",
     tabLabel: "Main Courses",
     title: "Main Courses",
     subtitle: "African Specialty & Fish Dishes",
@@ -151,6 +169,7 @@ export const MENU_CATEGORIES: MenuCategory[] = [
   },
   {
     id: "party-sharing",
+    domain: "food",
     tabLabel: "Party & Group Packages",
     title: "Party & Group Sharing Packages",
     subtitle: "Generous platters & celebratory feasts for groups",
@@ -214,6 +233,7 @@ export const MENU_CATEGORIES: MenuCategory[] = [
   },
   {
     id: "accompaniments-sides",
+    domain: "food",
     tabLabel: "Accompaniments & Sides",
     title: "Accompaniments & Sides",
     subtitle: "Extra orders of fresh Kenyan staples & garden greens",
@@ -270,6 +290,7 @@ export const MENU_CATEGORIES: MenuCategory[] = [
   },
   {
     id: "totos-quick-bites",
+    domain: "food",
     tabLabel: "Toto's & Quick Bites",
     title: "Toto's Corner & Quick Bites",
     subtitle: "Crispy lounge bites, fries & family-friendly favorites",
@@ -349,6 +370,7 @@ export const MENU_CATEGORIES: MenuCategory[] = [
   },
   {
     id: "desserts",
+    domain: "food",
     tabLabel: "Desserts & Sweets",
     title: "Desserts & Sweet Treats",
     subtitle: "Indulgent ice cream scoops & fresh Kenyan orchard fruits",
@@ -384,6 +406,7 @@ export const MENU_CATEGORIES: MenuCategory[] = [
   },
   {
     id: "beverages",
+    domain: "drinks",
     tabLabel: "Beverages",
     title: "Beverages",
     subtitle: "Hot Infusions, Coffee Bar & Cold Drinks",
@@ -394,6 +417,7 @@ export const MENU_CATEGORIES: MenuCategory[] = [
           {
             name: "Delmonte Juice (1 Ltr) / Freshly Squeezed Juice Glass",
             price: "500 / 200",
+            drinkType: "cold",
             desc: "Chilled fruit blend or fresh juice.",
             badges: ["Chilled"],
             options: [
@@ -404,36 +428,42 @@ export const MENU_CATEGORIES: MenuCategory[] = [
           {
             name: "Pure Special Brewed Tea",
             price: "450.00",
+            drinkType: "hot-tea",
             desc: "Excellent Kenyan Brewed Tea on only milk slowly simmered to perfection.",
             badges: ["Pure Milk Tea", "Signature"],
           },
           {
             name: "Dawa Served with Honey",
             price: "350.00",
+            drinkType: "hot-tea",
             desc: "Hot infusion of fresh crushed ginger, lemon, and Kenyan honey.",
             badges: ["Wellness"],
           },
           {
             name: "Wimbi Porridge",
             price: "300.00",
+            drinkType: "coffee-porridge",
             desc: "Warm, nourishing traditional finger-millet porridge.",
             badges: ["Traditional", "Healthy"],
           },
           {
             name: "Artisanal Tea Pots",
             price: "250.00",
+            drinkType: "hot-tea",
             desc: "Pot of Black, White, Green, Lemon, or Spiced Masala Tea.",
             badges: ["Tea Pot"],
           },
           {
             name: "Black Tea with Lemon",
             price: "200.00",
+            drinkType: "hot-tea",
             desc: "Brisk Kenyan black tea with fresh lemon.",
             badges: [],
           },
           {
             name: "Coffee & Tea Mug Station",
             price: "200 – 100",
+            drinkType: "coffee-porridge",
             desc: "Freshly pulled espresso specialties, coffee mugs, and rich hot chocolate.",
             badges: ["Barista Station"],
             options: [
@@ -448,6 +478,7 @@ export const MENU_CATEGORIES: MenuCategory[] = [
           {
             name: "Chilled Sodas & Water",
             price: "200 – 100",
+            drinkType: "cold",
             desc: "Refreshing bottled mineral water and chilled carbonated sodas.",
             badges: ["Cold Drinks"],
             options: [
