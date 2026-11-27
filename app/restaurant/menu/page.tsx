@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MENU_CATEGORIES, type MenuCategory, type MenuItem } from "./menuData";
+import { useSearchParams, useRouter } from "next/navigation";
+import {
+  MENU_CATEGORIES,
+  DRINK_SUBFILTERS,
+  type MenuCategory,
+  type MenuItem,
+  type MenuMode,
+} from "./menuData";
 
 const USERS_SVG_GROUP = (
   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -146,23 +153,52 @@ function matchesQuery(item: MenuItem, category: MenuCategory, groupName: string,
   return haystack.includes(q);
 }
 
+function parseMode(val: string | null): MenuMode {
+  if (val === "food" || val === "drinks") return val;
+  return "all";
+}
+
 export default function RestaurantMenuPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const [mode, setMode] = useState<MenuMode>(() => parseMode(searchParams.get("tab")));
+  const [drinkSub, setDrinkSub] = useState("all");
   const [query, setQuery] = useState("");
   const [groupOnly, setGroupOnly] = useState(false);
   const [activeId, setActiveId] = useState(MENU_CATEGORIES[0].id);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const isScrollingRef = useRef(false);
 
+  function switchMode(newMode: MenuMode) {
+    setMode(newMode);
+    setDrinkSub("all");
+    if (newMode === "drinks") setGroupOnly(false);
+    const params = new URLSearchParams(searchParams.toString());
+    if (newMode === "all") params.delete("tab");
+    else params.set("tab", newMode);
+    const qs = params.toString();
+    router.replace(qs ? `?${qs}` : ".", { scroll: false });
+    const cats = MENU_CATEGORIES.filter(
+      (c) => newMode === "all" || c.domain === newMode
+    );
+    if (cats.length) setActiveId(cats[0].id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   const q = query.trim().toLowerCase();
-  const visibleCategories = groupOnly
-    ? MENU_CATEGORIES.filter((c) => c.isGroupCategory)
-    : MENU_CATEGORIES;
+
+  const visibleCategories = MENU_CATEGORIES.filter((cat) => {
+    if (mode !== "all" && cat.domain !== mode) return false;
+    if (groupOnly && !cat.isGroupCategory) return false;
+    return true;
+  });
 
   useEffect(() => {
     const handleScroll = () => {
       if (isScrollingRef.current) return;
       const scrollPos = window.scrollY + 170;
-      for (const cat of MENU_CATEGORIES) {
+      for (const cat of visibleCategories) {
         const el = sectionRefs.current[cat.id];
         if (!el) continue;
         if (scrollPos >= el.offsetTop && scrollPos < el.offsetTop + el.offsetHeight) {
@@ -173,7 +209,7 @@ export default function RestaurantMenuPage() {
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [visibleCategories]);
 
   function scrollToCategory(id: string) {
     const el = sectionRefs.current[id];
@@ -184,11 +220,15 @@ export default function RestaurantMenuPage() {
     setTimeout(() => { isScrollingRef.current = false; }, 800);
   }
 
+  function isItemVisible(item: MenuItem, cat: MenuCategory, groupName: string): boolean {
+    if (groupOnly && !item.isGroupSharing) return false;
+    if (mode === "drinks" && drinkSub !== "all" && item.drinkType !== drinkSub) return false;
+    return matchesQuery(item, cat, groupName, q);
+  }
+
   const totalVisible = visibleCategories.reduce((acc, cat) =>
     acc + cat.groups.reduce((a, g) =>
-      a + g.items
-        .filter((item) => (!groupOnly || item.isGroupSharing))
-        .filter((item) => matchesQuery(item, cat, g.name, q)).length, 0), 0);
+      a + g.items.filter((item) => isItemVisible(item, cat, g.name)).length, 0), 0);
 
   return (
     <div className="min-h-screen bg-[#f9f7f4]">
@@ -223,8 +263,32 @@ export default function RestaurantMenuPage() {
         className="sticky top-16 z-40 shadow-md border-b backdrop-blur-md"
         style={{ backgroundColor: `${BRAND_DARK}f5`, borderColor: `${BRAND}33` }}>
         <div className="max-w-2xl mx-auto px-3 pt-2.5 pb-1.5">
+          {/* Segmented Mode Switcher */}
+          <div
+            className="grid grid-cols-3 gap-1 p-1 rounded-xl border"
+            style={{ backgroundColor: "rgba(0,0,0,0.4)", borderColor: `${BRAND}44` }}>
+            {([
+              { key: "all" as MenuMode, label: "Full Menu" },
+              { key: "food" as MenuMode, label: "Food & Dining" },
+              { key: "drinks" as MenuMode, label: "Drinks & Lounge" },
+            ]).map(({ key, label }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => switchMode(key)}
+                className="py-1.5 px-2 rounded-lg text-xs font-semibold tracking-wide transition-all"
+                style={
+                  mode === key
+                    ? { backgroundColor: BRAND, color: BRAND_DARK, fontWeight: 700 }
+                    : { color: "#e5e7eb" }
+                }>
+                {label}
+              </button>
+            ))}
+          </div>
+
           {/* Search + Group Filter */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mt-2">
           <div className="relative flex-1 flex items-center">
             <svg
               className="w-4 h-4 absolute left-3 pointer-events-none"
@@ -243,7 +307,13 @@ export default function RestaurantMenuPage() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search dishes, drinks, ingredients..."
+              placeholder={
+                mode === "drinks"
+                  ? "Search teas, coffee, dawa, juices, water..."
+                  : mode === "food"
+                    ? "Search breakfast, mains, platters, bites..."
+                    : "Search dishes, drinks, ingredients..."
+              }
               className="w-full text-white placeholder-stone-400 text-sm rounded-xl pl-9 pr-9 py-2 border focus:outline-none transition"
               style={{
                 backgroundColor: "rgba(0,0,0,0.35)",
@@ -261,7 +331,7 @@ export default function RestaurantMenuPage() {
               </button>
             )}
           </div>
-            <button
+            {mode !== "drinks" && <button
               type="button"
               onClick={() => setGroupOnly((v) => !v)}
               className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border transition"
@@ -271,34 +341,50 @@ export default function RestaurantMenuPage() {
               }>
               <span style={{ color: groupOnly ? BRAND_DARK : BRAND }}>{USERS_SVG_GROUP}</span>
               Group Sharing
-            </button>
+            </button>}
           </div>
 
-          {/* Category Tabs */}
+          {/* Category Tabs / Drink Sub-Filters */}
           <nav
             className="flex items-center gap-1.5 overflow-x-auto py-2 mt-1"
             style={{ scrollbarWidth: "none" }}>
-            {visibleCategories.map((cat) => {
-              const isActive = cat.id === activeId;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => scrollToCategory(cat.id)}
-                  className="shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200"
-                  style={
-                    isActive
-                      ? { backgroundColor: BRAND, color: BRAND_DARK }
-                      : {
-                          backgroundColor: "rgba(255,255,255,0.08)",
-                          color: "#e5e7eb",
-                          border: "1px solid rgba(255,255,255,0.1)",
-                        }
-                  }>
-                  {cat.tabLabel}
-                </button>
-              );
-            })}
+            {mode === "drinks"
+              ? DRINK_SUBFILTERS.map((sub) => (
+                  <button
+                    key={sub.id}
+                    type="button"
+                    onClick={() => setDrinkSub(sub.id)}
+                    className="shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200"
+                    style={
+                      drinkSub === sub.id
+                        ? { backgroundColor: BRAND, color: BRAND_DARK, fontWeight: 700 }
+                        : {
+                            backgroundColor: "rgba(255,255,255,0.08)",
+                            color: "#e5e7eb",
+                            border: "1px solid rgba(255,255,255,0.1)",
+                          }
+                    }>
+                    {sub.label}
+                  </button>
+                ))
+              : visibleCategories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => scrollToCategory(cat.id)}
+                    className="shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200"
+                    style={
+                      cat.id === activeId
+                        ? { backgroundColor: BRAND, color: BRAND_DARK }
+                        : {
+                            backgroundColor: "rgba(255,255,255,0.08)",
+                            color: "#e5e7eb",
+                            border: "1px solid rgba(255,255,255,0.1)",
+                          }
+                    }>
+                    {cat.tabLabel}
+                  </button>
+                ))}
           </nav>
         </div>
       </div>
@@ -326,9 +412,7 @@ export default function RestaurantMenuPage() {
             const visibleGroups = cat.groups
               .map((g) => ({
                 ...g,
-                items: g.items
-                  .filter((item) => (!groupOnly || item.isGroupSharing))
-                  .filter((item) => matchesQuery(item, cat, g.name, q)),
+                items: g.items.filter((item) => isItemVisible(item, cat, g.name)),
               }))
               .filter((g) => g.items.length > 0);
 
